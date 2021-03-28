@@ -2,4 +2,6 @@ A ranking system for students where it takes their scores , adds them to make a 
 
 Upcoming Updates:
 
-Enter the results to a database, fetch them order by mean in descending order to make proper results
+Enter the results to a database, fetch them order by mean in descending order to make proper numbered results 
+
+Provide for creating new tables on click of a button

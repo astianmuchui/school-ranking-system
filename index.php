@@ -1,5 +1,5 @@
 <?php
-        // require "./database/test.php";
+        include "./database/connection.php";
         function Handleform($name,$math,$english,$swahili,$chemistry,$biology,$physics,$history,$geography,$religion,$technical){
             if($math>99 ||$english>99 ||$swahili>99 ||$chemistry>99 ||$biology>99 ||$physics>99 ||$history>99 ||$geography>99 ||$religion>99 ||$technical>99){
                 echo "<h4>Marks cannot exceed 99</h4>";
@@ -12,7 +12,7 @@
             }
             
         }
-        
+
         function CreateMean($number,$math,$english,$swahili,$chemistry,$biology,$physics,$history,$geography,$religion,$technical,$mean){
             
             $sum1 = $math + $english + $swahili + $chemistry + $biology;
@@ -21,10 +21,10 @@
             $mean = $total/$number;
             // echo $mean;
         }
-        $grade= "";
+
         //Introduce the system to the grades
         function MakeGrade($mean,$grade){
-            
+            $grade= "";            
             //Grade E
             if($mean<=34){
                 $grade = 'E';
@@ -73,11 +73,26 @@
             if($mean>=85 && $mean<=99){
                 $grade = 'A';
             }
-            echo $mean.$grade;
+            echo $mean." ".$grade;
             
             
         }
+        function insert($name,$math,$english,$swahili,$chemistry,$biology,$physics,$history,$geography,$religion,$technical,$absolute,$grade){
+            include "./database/connection.php";
+            global $errors;
+            MakeGrade($absolute,$grade);
+            $errors = array();
+            $query = "INSERT INTO `results` (`id`, `student_name`, `math`, `english`, `swahili`, `chemistry`, `biology`, `physics`, `history`, `geographein`, `relegion`, `technical`, `mean`, `Grade`) VALUES (NULL, '$name', '$math', '$english', '$swahili', '$chemistry', '$biology', '$physics', '$history', '$geography', '$religion', '$technical', '$absolute', '$grade')";
+            $action = mysqli_query($connection,$query);
+            if($action){
+                echo 'Succesful entry';
+            }else{
+
+               echo 'Unsuccesful entry';
+            }
+        }
         if(isset($_POST['enter'])){
+           
             $name = $_POST['name'];
             $math = $_POST['math'];
             $english = $_POST['english'];
@@ -94,11 +109,57 @@
             $sum2 = $physics+$history+$geography+$religion+$technical;
             $total = $sum1+$sum2;
             $mean = $total/$number;
+            $absolute = abs($mean);
             Handleform($name,$math,$english,$swahili,$chemistry,$biology,$physics,$history,$geography,$religion,$technical);
-            if(CreateMean($number,$math,$english,$swahili,$chemistry,$biology,$physics,$history,$geography,$religion,$technical,$mean)){
-             MakeGrade($mean,$grade);
+            if($mean<=34){
+                $grade = 'E';
             }
-            MakeGrade($mean,$grade);
+            // Grade D-
+            if($mean>=35 && $mean<=39){
+                $grade = 'D-';
+            }
+            //Grade D
+            if($mean>=40 && $mean<=44){
+                $grade = 'D';
+            }
+            // Grade D+
+            if($mean>=45 && $mean<=49){
+                $grade = 'D+';
+            }
+            //Grade C-
+            if($mean>=50 && $mean<=54){
+                $grade = 'C-';
+            }
+            //Grade C
+            if($mean>=55 && $mean<=59){
+                $grade = 'C';
+            }
+            //Grade C+
+            if($mean>=60 && $mean<=64){
+                $grade = 'C+';
+            }
+            //Grade B-
+            if($mean>=65 && $mean<=69){
+                $grade = 'B-';
+            }
+            //Grade B
+            if($mean>=70 && $mean<=74){
+                $grade = 'B';
+            }
+            //Grade B+
+            if($mean>=75 && $mean<=79){
+                $grade = 'B+';
+            }
+            //Grade A-
+            if($mean>=80 && $mean<=84){
+                $grade = 'A-';
+            }
+            // Grade A
+            if($mean>=85 && $mean<=99){
+                $grade = 'A';
+            }
+            insert($name,$math,$english,$swahili,$chemistry,$biology,$physics,$history,$geography,$religion,$technical,$mean,$grade);
+          
         }
         
 ?>
@@ -126,7 +187,7 @@
         </a>
       </li>
       <li class="nav-item">
-        <a class="nav-link" href="#">View results</a>
+        <a class="nav-link" href="./results.php">View results</a>
       </li>
       
     </ul>
